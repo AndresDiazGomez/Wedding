@@ -1,10 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import SongVotingApp from './Voting/SongVotingApp.tsx';
+import Dashboard from './Voting/Dashboard.tsx';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<SongVotingApp />
+		<Dashboard />
 	</StrictMode>,
 );

@@ -5,7 +5,7 @@ import { SearchBar } from './SearchBar';
 import { SelectedSongs } from './SelectedSongs';
 import { SongList } from './SongList';
 
-export const SongVotingApp: React.FC = () => {
+export const SendVote: React.FC = () => {
 	const [query, setQuery] = useState<string>('');
 	const [tracks, setTracks] = useState<Track[]>([]);
 	const [selected, setSelected] = useState<Track[]>([]);
@@ -21,7 +21,7 @@ export const SongVotingApp: React.FC = () => {
 			const res = await fetch(
 				`https://itunes.apple.com/search?term=${encodeURIComponent(
 					query,
-				)}&media=music&limit=10`,
+				)}&media=music&limit=5`,
 			);
 			const data: { results: Track[] } = await res.json();
 			setTracks(data.results);
@@ -61,8 +61,7 @@ export const SongVotingApp: React.FC = () => {
 	};
 
 	return (
-		<div className='max-w-xl mx-auto p-4'>
-			<h1 className='text-2xl font-bold mb-4'>Votación de Canciones</h1>
+		<>
 			<SearchBar query={query} setQuery={setQuery} onSearch={handleSearch} />
 			{loading && <p>Cargando...</p>}
 			{error && <p className='text-red-500'>{error}</p>}
@@ -74,8 +73,8 @@ export const SongVotingApp: React.FC = () => {
 			>
 				Enviar Votos
 			</button>
-		</div>
+		</>
 	);
 };
 
-export default SongVotingApp;
+export default SendVote;

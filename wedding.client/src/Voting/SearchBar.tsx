@@ -6,15 +6,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 	setQuery,
 	onSearch,
 }) => (
-	<form onSubmit={onSearch} className='mb-4 flex'>
+	<form onSubmit={onSearch} className='mb-4 flex flex-col'>
 		<input
 			type='text'
 			value={query}
 			onChange={(e) => setQuery(e.target.value)}
 			placeholder='Buscar canción...'
-			className='flex-grow p-2 border rounded-l'
+			className='p-2 border rounded mb-1'
 		/>
-		<button type='submit' className='p-2 bg-blue-500 text-white rounded-r'>
+		<button type='submit' className='p-2 bg-blue-500 text-white rounded'>
 			Buscar
 		</button>
 	</form>
