@@ -4,6 +4,7 @@ import type { Track } from './Track';
 import { SearchBar } from './SearchBar';
 import { SelectedSongs } from './SelectedSongs';
 import { SongList } from './SongList';
+import { sendVotes } from './api';
 
 export const SendVote: React.FC = () => {
 	const [query, setQuery] = useState<string>('');
@@ -21,7 +22,7 @@ export const SendVote: React.FC = () => {
 			const res = await fetch(
 				`https://itunes.apple.com/search?term=${encodeURIComponent(
 					query,
-				)}&media=music&limit=5`,
+				)}&media=music&limit=10`,
 			);
 			const data: { results: Track[] } = await res.json();
 			setTracks(data.results);
@@ -46,18 +47,30 @@ export const SendVote: React.FC = () => {
 
 	const submitVotes = async () => {
 		if (selected.length === 0) return;
-		const ids: number[] = selected.map((t) => t.trackId);
 		try {
-			await fetch('https://api.tu-servidor.com/votos', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ trackIds: ids }),
-			});
+			await sendVotes(selected);
 			alert('Votos enviados con éxito');
 			setSelected([]);
 		} catch {
 			alert('Error al enviar votos');
 		}
+	};
+
+	const getSubmitSection = () => {
+		if (selected.length === 0) {
+			return <p className='text-gray-500'>No has seleccionado canciones</p>;
+		}
+		return (
+			<>
+				<SelectedSongs selected={selected} onRemove={removeSelected} />
+				<button
+					onClick={submitVotes}
+					className='mt-4 w-full p-2 bg-green-500 text-white rounded cursor-pointer'
+				>
+					Enviar Votos
+				</button>
+			</>
+		);
 	};
 
 	return (
@@ -66,13 +79,7 @@ export const SendVote: React.FC = () => {
 			{loading && <p>Cargando...</p>}
 			{error && <p className='text-red-500'>{error}</p>}
 			<SongList tracks={tracks} selected={selected} onToggle={toggleSelect} />
-			<SelectedSongs selected={selected} onRemove={removeSelected} />
-			<button
-				onClick={submitVotes}
-				className='mt-4 w-full p-2 bg-green-500 text-white rounded'
-			>
-				Enviar Votos
-			</button>
+			{getSubmitSection()}
 		</>
 	);
 };

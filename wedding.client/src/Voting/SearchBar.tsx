@@ -14,7 +14,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 			placeholder='Buscar canción...'
 			className='p-2 border rounded mb-1'
 		/>
-		<button type='submit' className='p-2 bg-blue-500 text-white rounded'>
+		<button
+			type='submit'
+			className='p-2 bg-blue-500 text-white rounded cursor-pointer'
+		>
 			Buscar
 		</button>
 	</form>

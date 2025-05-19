@@ -14,7 +14,7 @@ export const SelectedSongs: React.FC<SelectedSongsProps> = ({
 					<li key={track.trackId} className='mb-2 flex items-center'>
 						<button
 							onClick={() => onRemove(track)}
-							className='text-red-500 mr-2'
+							className='text-red-500 mr-2 cursor-pointer'
 						>
 							✕
 						</button>
