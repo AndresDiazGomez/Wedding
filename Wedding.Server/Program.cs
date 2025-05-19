@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.ComponentModel.DataAnnotations;
 using Wedding.Server.Features.Vote;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ITrackRepository, MemoryTrackRepository>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -22,6 +24,7 @@ app.MapGet("/api/votes", async (ITrackRepository repository) =>
 
 app.MapPost("/api/votes", async (ITrackRepository repository, 
     IHttpContextAccessor httpContextAccessor,
+    IHubContext<VotesFeedHub, IVotesFeedUpdateClient> hubContext,
     [Required][FromBody] Track[] tracks) =>
 {
     if (tracks is null || tracks.Length == 0)
@@ -38,8 +41,12 @@ app.MapPost("/api/votes", async (ITrackRepository repository,
         return Results.BadRequest();
     }
     await repository.UpsertTrackAsync(trackVote);
+    TrackVotes[] votes = await repository.GetTrackVotesAsync();
+    await hubContext.Clients.All.ReceiveVotesOnUpdate(votes);
     return Results.Ok();
 });
+
+app.MapHub<VotesFeedHub>("/hubs/vote-feed");
 
 app.MapFallbackToFile("/index.html");
 

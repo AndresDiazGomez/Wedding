@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import SendVote from './SendVote';
 import VotingResults from './VotingResults';
 import type { VotingEntry } from './VotingEntry';
-import { getVotes } from './api';
+import { sendVotes } from './api';
+import type { Track } from './Track';
 
-const Dashboard: React.FC = () => {
-	const [results, setResults] = useState<VotingEntry[]>();
-
-	useEffect(() => {
-		getVotes().then(setResults!);
-	}, []);
-
-	const onVoteHandler = (trackId: number): void => {
-		console.error(`No se encontró la canción con ID: ${trackId}`);
-		//const entry = results.find((entry) => entry.trackId === trackId);
-		//if (!entry) {
-		//	return;
-		//}
-		//results.find((entry) => entry.trackId === trackId)!.votes++;
-		//setResults([...results]);
+const Dashboard: React.FC<{ entries: VotingEntry[] | undefined }> = ({
+	entries = [],
+}) => {
+	const onVoteHandler = async (track: Track): Promise<void> => {
+		if (!track) return;
+		try {
+			await sendVotes([track]);
+			alert('Voto enviado con éxito');
+		} catch {
+			alert('Error al enviar el voto');
+		}
 	};
 
 	return (
@@ -31,7 +28,7 @@ const Dashboard: React.FC = () => {
 					<SendVote />
 				</div>
 				<div className='w-full md:w-1/2 bg-white rounded shadow p-4 mb-4 md:mb-0'>
-					<VotingResults entries={results} onVote={onVoteHandler} />
+					<VotingResults entries={entries} onVote={onVoteHandler} />
 				</div>
 			</div>
 		</div>

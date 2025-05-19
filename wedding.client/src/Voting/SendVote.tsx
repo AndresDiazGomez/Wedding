@@ -22,7 +22,7 @@ export const SendVote: React.FC = () => {
 			const res = await fetch(
 				`https://itunes.apple.com/search?term=${encodeURIComponent(
 					query,
-				)}&media=music&limit=10`,
+				)}&media=music&limit=6`,
 			);
 			const data: { results: Track[] } = await res.json();
 			setTracks(data.results);
