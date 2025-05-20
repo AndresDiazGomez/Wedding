@@ -52,6 +52,13 @@ export function startVotingHubConnection(
 		});
 	});
 
+	connection.on('OnTrackRemoved', (trackId: number) => {
+		onUpdate((previous) => {
+			const updated = previous.filter((entry) => entry.trackId !== trackId);
+			return updated;
+		});
+	});
+
 	connection.start().catch(console.error);
 }
 

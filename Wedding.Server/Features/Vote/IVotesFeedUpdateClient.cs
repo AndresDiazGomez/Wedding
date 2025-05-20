@@ -2,5 +2,6 @@
 
 public interface IVotesFeedUpdateClient
 {
+    Task OnTrackRemoved(long trackId);
     Task ReceiveVotesOnUpdate(TrackVote trackVotes);
 }

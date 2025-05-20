@@ -1,12 +1,14 @@
+using System.Collections.Concurrent;
+
 namespace Wedding.Server.Features.Vote;
 
 public class MemoryTrackRepository : ITrackRepository
 {
-    private readonly Dictionary<long, TrackVotes> _store;
+    private readonly ConcurrentDictionary<long, TrackVotes> _store;
 
     public MemoryTrackRepository()
     {
-        _store = new Dictionary<long, TrackVotes>
+        _store = new ConcurrentDictionary<long, TrackVotes>
         {
             [1594677764] = new TrackVotes
             {
@@ -18,7 +20,6 @@ public class MemoryTrackRepository : ITrackRepository
                 Voters = ["::1", "::2"]
             }
         };
-
     }
 
     public Task<TrackVotes[]> GetTrackVotesAsync()
@@ -31,13 +32,9 @@ public class MemoryTrackRepository : ITrackRepository
     {
         foreach (Track track in TrackVote.Tracks)
         {
-            if (_store.TryGetValue(track.TrackId, out TrackVotes? trackVotes))
-            {
-                trackVotes.Voters.Add(TrackVote.VoterId);
-            }
-            else
-            {
-                trackVotes = new TrackVotes
+            _store.AddOrUpdate(
+                track.TrackId,
+                key => new TrackVotes
                 {
                     TrackId = track.TrackId,
                     ArtworkUrl100 = track.ArtworkUrl100,
@@ -45,10 +42,21 @@ public class MemoryTrackRepository : ITrackRepository
                     ArtistName = track.ArtistName,
                     PreviewUrl = track.PreviewUrl,
                     Voters = [TrackVote.VoterId]
-                };
-                _store[track.TrackId] = trackVotes;
-            }
+                },
+                (key, existing) =>
+                {
+                    existing.Voters.Add(TrackVote.VoterId);
+                    return existing;
+                }
+            );
         }
+
         return Task.CompletedTask;
+    }
+
+    public Task<bool> RemoveTrackAsync(long trackId)
+    {
+        bool removed = _store.TryRemove(trackId, out _);
+        return Task.FromResult(removed);
     }
 }

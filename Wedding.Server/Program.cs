@@ -45,6 +45,19 @@ app.MapPost("/api/votes", async (ITrackRepository repository,
     return Results.Ok();
 });
 
+app.MapDelete("/api/votes/{trackId:long}", async (long trackId, 
+    ITrackRepository repository,
+    IHubContext<VotesFeedHub, IVotesFeedUpdateClient> hubContext) =>
+{
+    bool removed = await repository.RemoveTrackAsync(trackId);
+    if (!removed)
+    {
+        return Results.NotFound();
+    }
+    await hubContext.Clients.All.OnTrackRemoved(trackId);
+    return Results.NoContent();
+});
+
 app.MapHub<VotesFeedHub>("/hubs/vote-feed");
 
 app.MapFallbackToFile("/index.html");

@@ -22,11 +22,11 @@
   </ItemGroup>
 
   <Target Name="BuildReactApp" BeforeTargets="Publish">
-	<Exec Command="npm install" WorkingDirectory="$(ProjectDir)..\wedding.client" />
-	<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)..\wedding.client" />
+	<Exec Command="npm install" WorkingDirectory="$(SpaRoot)" />
+	<Exec Command="npm run build" WorkingDirectory="$(SpaRoot)" />
 	<Exec Command="rmdir /S /Q $(ProjectDir)wwwroot" />
 	<Exec Command="mkdir $(ProjectDir)wwwroot" />
-	<Exec Command="xcopy /E /I /Y $(ProjectDir)..\wedding.client\dist $(ProjectDir)wwwroot" />
+	<Exec Command="xcopy /E /I /Y $(SpaRoot)\dist $(ProjectDir)wwwroot" />
   </Target>
 
 </Project>

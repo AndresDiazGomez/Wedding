@@ -66,7 +66,7 @@ export const SendVote: React.FC = () => {
 					onClick={submitVotes}
 					className='mt-4 w-full p-2 bg-green-500 text-white rounded cursor-pointer'
 				>
-					Enviar Votos
+					Votar
 				</button>
 			</>
 		);
