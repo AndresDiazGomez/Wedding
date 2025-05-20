@@ -12,7 +12,6 @@ const Dashboard: React.FC<{ entries: VotingEntry[] | undefined }> = ({
 		if (!track) return;
 		try {
 			await sendVotes([track]);
-			alert('Voto enviado con éxito');
 		} catch {
 			alert('Error al enviar el voto');
 		}

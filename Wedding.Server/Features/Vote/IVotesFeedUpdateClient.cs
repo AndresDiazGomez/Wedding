@@ -2,5 +2,5 @@
 
 public interface IVotesFeedUpdateClient
 {
-    Task ReceiveVotesOnUpdate(TrackVotes[] trackVotes);
+    Task ReceiveVotesOnUpdate(TrackVote trackVotes);
 }

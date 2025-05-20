@@ -49,7 +49,6 @@ export const SendVote: React.FC = () => {
 		if (selected.length === 0) return;
 		try {
 			await sendVotes(selected);
-			alert('Votos enviados con éxito');
 			setSelected([]);
 		} catch {
 			alert('Error al enviar votos');

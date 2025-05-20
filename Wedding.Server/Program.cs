@@ -41,8 +41,7 @@ app.MapPost("/api/votes", async (ITrackRepository repository,
         return Results.BadRequest();
     }
     await repository.UpsertTrackAsync(trackVote);
-    TrackVotes[] votes = await repository.GetTrackVotesAsync();
-    await hubContext.Clients.All.ReceiveVotesOnUpdate(votes);
+    await hubContext.Clients.All.ReceiveVotesOnUpdate(trackVote);
     return Results.Ok();
 });
 

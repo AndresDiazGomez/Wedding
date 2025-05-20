@@ -2,5 +2,5 @@
 
 public class TrackVotes : Track
 {
-    public HashSet<string> Voters { get; set; } = [];
+    public List<string> Voters { get; set; } = [];
 }
