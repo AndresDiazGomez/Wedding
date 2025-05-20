@@ -20,14 +20,8 @@ export function startVotingHubConnection(
 		return;
 	}
 
-	const target = import.meta.env.ASPNETCORE_HTTPS_PORT
-		? `wss://localhost:${import.meta.env.ASPNETCORE_HTTPS_PORT}`
-		: import.meta.env.ASPNETCORE_URLS
-		? import.meta.env.ASPNETCORE_URLS.split(';')[0]
-		: 'wss://localhost:7206';
-
 	connection = new HubConnectionBuilder()
-		.withUrl(`${target}/hubs/vote-feed`, {
+		.withUrl(import.meta.env.VITE_ROUTE_HUB_URL, {
 			skipNegotiation: true,
 			transport: HttpTransportType.WebSockets,
 		})
@@ -38,24 +32,22 @@ export function startVotingHubConnection(
 	connection.on('ReceiveVotesOnUpdate', (update: TrackVote) => {
 		onUpdate((previous) => {
 			const updated = [...previous];
-			console.log('Before Updated votes:', updated);
 			for (const track of update.tracks) {
 				const idx = updated.findIndex(
 					(entry) => entry.trackId === track.trackId,
 				);
 				if (idx !== -1) {
 					const entry = updated[idx];
-					if (!entry.voters.includes(update.voterId)) {
-						updated[idx] = {
-							...entry,
-							voters: [...entry.voters, update.voterId],
-						};
-					}
+					// if (!entry.voters.includes(update.voterId)) {
+					updated[idx] = {
+						...entry,
+						voters: [...entry.voters, update.voterId],
+					};
+					// }
 				} else {
 					updated.push({ ...track, voters: [update.voterId] });
 				}
 			}
-			console.log('After Updated votes:', updated);
 			return updated;
 		});
 	});

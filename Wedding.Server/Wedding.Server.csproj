@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -20,5 +20,13 @@
       <Version>9.*-*</Version>
     </PackageReference>
   </ItemGroup>
+
+  <Target Name="BuildReactApp" BeforeTargets="Publish">
+	<Exec Command="npm install" WorkingDirectory="$(ProjectDir)..\wedding.client" />
+	<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)..\wedding.client" />
+	<Exec Command="rmdir /S /Q $(ProjectDir)wwwroot" />
+	<Exec Command="mkdir $(ProjectDir)wwwroot" />
+	<Exec Command="xcopy /E /I /Y $(ProjectDir)..\wedding.client\dist $(ProjectDir)wwwroot" />
+  </Target>
 
 </Project>

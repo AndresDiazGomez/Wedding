@@ -28,7 +28,9 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -20 }}
 							transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-							className='flex items-center'
+							className={`flex items-center ${
+								index === 0 ? 'bg-green-100' : 'bg-white'
+							} p-4 rounded shadow`}
 						>
 							<span className='w-6 text-lg font-bold mr-4'>{index + 1}</span>
 							<img
