@@ -15,7 +15,7 @@ public class MemoryTrackRepository : ITrackRepository
                 TrackName = "All Of You",
                 ArtistName = "Stephanie Beatriz, Olga Merediz, John Leguizamo, Adassa, Maluma & Encanto - Cast",
                 PreviewUrl = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/15/30/7c/15307c6a-81cd-824b-fd72-1dacd4790260/mzaf_1002346285523223508.plus.aac.p.m4a",
-                Voters = new HashSet<string> { "::1", "::2" }
+                Voters = ["::1", "::2"]
             }
         };
 
