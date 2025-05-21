@@ -1,13 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using System.ComponentModel.DataAnnotations;
-using Wedding.Server.Features.Vote;
+using Wedding.Module.Vote;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<ITrackRepository, MemoryTrackRepository>();
-builder.Services.AddSignalR();
+builder.Services.AddVoteModule();
 
 var app = builder.Build();
 
@@ -16,49 +11,7 @@ app.MapStaticAssets();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/votes", async (ITrackRepository repository) =>
-{
-    TrackVotes[] votes = await repository.GetTrackVotesAsync();
-    return Results.Ok(votes);
-});
-
-app.MapPost("/api/votes", async (ITrackRepository repository, 
-    IHttpContextAccessor httpContextAccessor,
-    IHubContext<VotesFeedHub, IVotesFeedUpdateClient> hubContext,
-    [Required][FromBody] Track[] tracks) =>
-{
-    if (tracks is null || tracks.Length == 0)
-    {
-        return Results.BadRequest();
-    }
-    TrackVote trackVote = new()
-    {
-        Tracks = [.. tracks.Where(item => item is not null)],
-        VoterId = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty
-    };
-    if (trackVote.Tracks.Length == 0)
-    {
-        return Results.BadRequest();
-    }
-    await repository.UpsertTrackAsync(trackVote);
-    await hubContext.Clients.All.ReceiveVotesOnUpdate(trackVote);
-    return Results.Ok();
-});
-
-app.MapDelete("/api/votes/{trackId:long}", async (long trackId, 
-    ITrackRepository repository,
-    IHubContext<VotesFeedHub, IVotesFeedUpdateClient> hubContext) =>
-{
-    bool removed = await repository.RemoveTrackAsync(trackId);
-    if (!removed)
-    {
-        return Results.NotFound();
-    }
-    await hubContext.Clients.All.OnTrackRemoved(trackId);
-    return Results.NoContent();
-});
-
-app.MapHub<VotesFeedHub>("/hubs/vote-feed");
+app.MapVotingEndpoints();
 
 app.MapFallbackToFile("/index.html");
 

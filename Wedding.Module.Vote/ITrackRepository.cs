@@ -1,4 +1,4 @@
-namespace Wedding.Server.Features.Vote;
+namespace Wedding.Module.Vote;
 
 public interface ITrackRepository
 {

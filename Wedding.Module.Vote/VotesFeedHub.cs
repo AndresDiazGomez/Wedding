@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace Wedding.Server.Features.Vote;
+namespace Wedding.Module.Vote;
 
 internal sealed class VotesFeedHub : Hub<IVotesFeedUpdateClient>
 {

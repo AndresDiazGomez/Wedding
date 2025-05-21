@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Wedding.Server.Features.Vote;
+namespace Wedding.Module.Vote;
 
 public class Track
 {
