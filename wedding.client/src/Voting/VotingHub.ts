@@ -4,14 +4,14 @@ import {
 	LogLevel,
 	HttpTransportType,
 } from '@microsoft/signalr';
-import type { VotingEntry } from './VotingEntry';
-import type { TrackVote } from './TrackVote';
+import type { TrackVotes } from './TrackVotes';
+import type { VoteForTrackCommand } from './VoteForTrackCommand';
 import type { Dispatch, SetStateAction } from 'react';
 
 let connection: HubConnection | null = null;
 
 export function startVotingHubConnection(
-	onUpdate: Dispatch<SetStateAction<VotingEntry[]>>,
+	onUpdate: Dispatch<SetStateAction<TrackVotes[]>>,
 ) {
 	if (
 		connection &&
@@ -29,7 +29,7 @@ export function startVotingHubConnection(
 		.withAutomaticReconnect()
 		.build();
 
-	connection.on('ReceiveVotesOnUpdate', (update: TrackVote) => {
+	connection.on('ReceiveVotesOnUpdate', (update: VoteForTrackCommand) => {
 		onUpdate((previous) => {
 			const updated = [...previous];
 			for (const track of update.tracks) {

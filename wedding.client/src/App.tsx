@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { VotingEntry } from './Voting/VotingEntry';
+import type { TrackVotes } from './Voting/TrackVotes';
 import { getVotes } from './Voting/api';
 import Dashboard from './Voting/Dashboard';
 import {
@@ -8,7 +8,7 @@ import {
 } from './Voting/VotingHub';
 
 const App: React.FC = () => {
-	const [results, setResults] = useState<VotingEntry[]>([]);
+	const [results, setResults] = useState<TrackVotes[]>([]);
 
 	useEffect(() => {
 		getVotes().then(setResults!);

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using Wedding.Infrastructure.Bus;
 using Wedding.Module.Vote.Events;
+using Wedding.Module.Vote.Hubs;
 
 namespace Wedding.Module.Vote;
 
@@ -45,7 +46,7 @@ public static class ModuleRegistration
             {
                 return Results.BadRequest();
             }
-            TrackVote trackVote = new()
+            VoteForTrackCommand trackVote = new()
             {
                 Tracks = [.. tracks.Where(item => item is not null)],
                 VoterId = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty

@@ -28,7 +28,7 @@ public class MemoryTrackRepository : ITrackRepository
         return Task.FromResult(result);
     }
 
-    public Task UpsertTrackAsync(TrackVote TrackVote)
+    public Task UpsertTrackAsync(VoteForTrackCommand TrackVote)
     {
         foreach (Track track in TrackVote.Tracks)
         {

@@ -4,7 +4,7 @@ public interface ITrackRepository
 {
     Task<TrackVotes[]> GetTrackVotesAsync();
 
-    Task UpsertTrackAsync(TrackVote trackVote);
+    Task UpsertTrackAsync(VoteForTrackCommand trackVote);
 
     Task<bool> RemoveTrackAsync(long trackId);
 }

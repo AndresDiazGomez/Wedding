@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Wedding.Infrastructure.Bus;
+using Wedding.Module.Vote.Hubs;
 
 namespace Wedding.Module.Vote.Events;
 
-internal record NewVotedIntegrationEvent(TrackVote TrackVote) : IntegrationEvent
+internal record NewVotedIntegrationEvent(VoteForTrackCommand TrackVote) : IntegrationEvent
 {
 }
 

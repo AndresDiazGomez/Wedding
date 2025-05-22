@@ -1,11 +1,11 @@
 import React from 'react';
 import SendVote from './SendVote';
 import VotingResults from './VotingResults';
-import type { VotingEntry } from './VotingEntry';
+import type { TrackVotes } from './TrackVotes';
 import { sendVotes } from './api';
 import type { Track } from './Track';
 
-const Dashboard: React.FC<{ entries: VotingEntry[] | undefined }> = ({
+const Dashboard: React.FC<{ entries: TrackVotes[] | undefined }> = ({
 	entries = [],
 }) => {
 	const onVoteHandler = async (track: Track): Promise<void> => {

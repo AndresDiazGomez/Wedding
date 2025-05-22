@@ -1,5 +1,5 @@
 import type { Track } from './Track';
 
-export interface VotingEntry extends Track {
+export interface TrackVotes extends Track {
 	voters: string[];
 }

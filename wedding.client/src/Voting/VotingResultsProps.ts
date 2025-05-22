@@ -1,7 +1,7 @@
 import type { Track } from './Track';
-import type { VotingEntry } from './VotingEntry';
+import type { TrackVotes } from './TrackVotes';
 
 export interface VotingResultsProps {
-	entries: VotingEntry[];
+	entries: TrackVotes[];
 	onVote: (track: Track) => void;
 }

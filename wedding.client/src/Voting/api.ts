@@ -1,7 +1,7 @@
 import type { Track } from './Track';
-import type { VotingEntry } from './VotingEntry';
+import type { TrackVotes } from './TrackVotes';
 
-export async function getVotes(): Promise<VotingEntry[]> {
+export async function getVotes(): Promise<TrackVotes[]> {
 	const response = await fetch('api/votes');
 	if (response.ok) {
 		return await response.json();

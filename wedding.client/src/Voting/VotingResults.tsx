@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { VotingResultsProps } from './VotingResultsProps';
-import type { VotingEntry } from './VotingEntry';
+import type { TrackVotes } from './TrackVotes';
 
 const VotingResults: React.FC<VotingResultsProps> = ({
 	entries = [],
@@ -9,9 +9,9 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 }) => {
 	const merged = entries
 		.map((e) => {
-			return { votes: e.voters?.length ?? 0, track: e as VotingEntry };
+			return { votes: e.voters?.length ?? 0, track: e as TrackVotes };
 		})
-		.filter((item) => item !== null) as { votes: number; track: VotingEntry }[];
+		.filter((item) => item !== null) as { votes: number; track: TrackVotes }[];
 
 	merged.sort((a, b) => b.votes - a.votes);
 

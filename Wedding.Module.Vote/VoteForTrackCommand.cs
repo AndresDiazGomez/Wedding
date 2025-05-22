@@ -2,7 +2,7 @@
 
 namespace Wedding.Module.Vote;
 
-public class TrackVote
+public class VoteForTrackCommand
 {
     [Required]
     public string VoterId { get; set; } = string.Empty;
