@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using Wedding.Infrastructure.Bus;
@@ -16,28 +15,30 @@ public static class ModuleRegistration
     public static IServiceCollection AddVoteModule(this IServiceCollection services)
     {
         services.AddHttpContextAccessor()
-            .AddSingleton<ITrackRepository, MemoryTrackRepository>()
+            .AddSingleton<MemoryTrackRepository>()
+            .AddSingleton<IDeviceIdProvider, DeviceIdProvider>()
+            .AddSingleton(typeof(IEventBus<>), typeof(ChannelEventBus<>))
+            .AddSingleton(typeof(InMemoryMessageQueue<>))
             .AddSignalR();
 
-        services.AddSingleton(typeof(IEventBus<>), typeof(ChannelEventBus<>));
-        services.AddSingleton(typeof(InMemoryMessageQueue<>));
-
-        services.AddHostedService<NewVotedIntegrationEventProcessor>();
-        services.AddHostedService<TrackRemovedIntegrationEventProcessor>();
+        services
+            .AddHostedService<NewVotedIntegrationEventProcessor>()
+            .AddHostedService<TrackRemovedIntegrationEventProcessor>()
+            .AddHostedService<FlushServiceProcessor>();
 
         return services;
     }
 
     public static void MapVotingEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/votes", async (ITrackRepository repository) =>
+        app.MapGet("/api/votes", async (MemoryTrackRepository repository) =>
         {
             TrackVotes[] votes = await repository.GetTrackVotesAsync();
             return Results.Ok(votes);
         });
 
-        app.MapPost("/api/votes", async (ITrackRepository repository,
-            IHttpContextAccessor httpContextAccessor,
+        app.MapPost("/api/votes", async (MemoryTrackRepository repository,
+            IDeviceIdProvider deviceIdProvider,
             IEventBus<NewVotedIntegrationEvent> eventBus,
             CancellationToken cancellationToken,
             [Required][FromBody] Track[] tracks) =>
@@ -49,7 +50,7 @@ public static class ModuleRegistration
             VoteForTrackCommand trackVote = new()
             {
                 Tracks = [.. tracks.Where(item => item is not null)],
-                VoterId = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty
+                VoterId = deviceIdProvider.GetDeviceId()
             };
             if (trackVote.Tracks.Length == 0)
             {
@@ -61,7 +62,7 @@ public static class ModuleRegistration
         });
 
         app.MapDelete("/api/votes/{trackId:long}", async (long trackId,
-            ITrackRepository repository,
+            MemoryTrackRepository repository,
             IEventBus<TrackRemovedIntegrationEvent> eventBus,
             CancellationToken cancellationToken) =>
         {

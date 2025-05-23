@@ -42,6 +42,12 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 								<p className='font-semibold'>{track.trackName}</p>
 								<p className='text-sm text-gray-600'>{track.artistName}</p>
 								<p className='text-sm'>Votos: {votes}</p>
+								{track.previewUrl && (
+									<audio controls className='mt-2 w-full'>
+										<source src={track.previewUrl} type='audio/mp4' />
+										Your browser does not support the audio element.
+									</audio>
+								)}
 							</div>
 							<button
 								onClick={() => onVote(track)}

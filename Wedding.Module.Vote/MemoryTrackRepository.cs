@@ -2,9 +2,10 @@ using System.Collections.Concurrent;
 
 namespace Wedding.Module.Vote;
 
-public class MemoryTrackRepository : ITrackRepository
+public class MemoryTrackRepository
 {
     private readonly ConcurrentDictionary<long, TrackVotes> _store;
+    private readonly HashSet<long> _dirty = [];
 
     public MemoryTrackRepository()
     {
@@ -22,13 +23,13 @@ public class MemoryTrackRepository : ITrackRepository
         };
     }
 
-    public Task<TrackVotes[]> GetTrackVotesAsync()
+    internal Task<TrackVotes[]> GetTrackVotesAsync()
     {
         var result = _store.Values.ToArray();
         return Task.FromResult(result);
     }
 
-    public Task UpsertTrackAsync(VoteForTrackCommand TrackVote)
+    internal Task UpsertTrackAsync(VoteForTrackCommand TrackVote)
     {
         foreach (Track track in TrackVote.Tracks)
         {
@@ -49,14 +50,27 @@ public class MemoryTrackRepository : ITrackRepository
                     return existing;
                 }
             );
+            _dirty.Add(track.TrackId);
         }
 
         return Task.CompletedTask;
     }
 
-    public Task<bool> RemoveTrackAsync(long trackId)
+    internal Task<bool> RemoveTrackAsync(long trackId)
     {
         bool removed = _store.TryRemove(trackId, out _);
         return Task.FromResult(removed);
+    }
+
+    internal TrackVotes[] GetDirty()
+    {
+        return [.. _store
+            .Where(item => _dirty.Contains(item.Key))
+            .Select(item => item.Value)];
+    }
+
+    internal void Clear()
+    {
+        _dirty.Clear();
     }
 }
