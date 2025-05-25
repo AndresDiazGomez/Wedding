@@ -14,13 +14,19 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		if (!audio) return;
 		const onLoaded = () => setDuration(audio.duration);
 		const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+		const onEnded = () => {
+			setIsPlaying(false);
+			setCurrentTime(0);
+		};
 
 		audio.addEventListener('loadedmetadata', onLoaded);
 		audio.addEventListener('timeupdate', onTimeUpdate);
+		audio.addEventListener('ended', onEnded);
 
 		return () => {
 			audio.removeEventListener('loadedmetadata', onLoaded);
 			audio.removeEventListener('timeupdate', onTimeUpdate);
+			audio.removeEventListener('ended', onEnded);
 		};
 	}, []);
 
@@ -56,13 +62,11 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 
 	const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
-	// const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
-
 	return (
 		<>
 			<div
 				className={`flex flex-col rounded-lg px-4 py-2 mb-2 cursor-pointer ${
-					isSelected && 'bg-[#FFA500]'
+					isSelected ? 'bg-[#FFA500]' : ''
 				}`}
 				onClick={handleToggle}
 			>
@@ -71,20 +75,20 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 						<img
 							src={track.artworkUrl100}
 							alt={track.trackName}
-							className='aspect-square rounded-lg size-14'
+							className='flex-shrink-0 w-14 h-14 aspect-square rounded-lg'
 						/>
 					)}
-					<div className='flex-1'>
-						<p className='text-white text-base font-bold leading-tight truncate'>
+					<div className='flex-1 min-w-0'>
+						<p className='truncate whitespace-nowrap text-white text-base font-bold leading-tight'>
 							{track.trackName}
 						</p>
-						<p className='text-white text-sm font-normal leading-normal truncate'>
+						<p className='truncate whitespace-nowrap text-white text-sm font-normal leading-normal'>
 							{track.artistName}
 						</p>
 					</div>
 					<button
 						onClick={togglePlay}
-						className='flex shrink-0 items-center justify-center rounded-full w-10 h-10 bg-[#38e07b] text-[#122118]'
+						className='flex-shrink-0 flex items-center justify-center rounded-full w-10 h-10 bg-[#38e07b] text-[#122118]'
 					>
 						{isPlaying ? (
 							<svg
@@ -129,7 +133,7 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 					step={0.01}
 					value={volume}
 					onChange={handleVolumeChange}
-					className='w-full h-2 mt-2 accent-[#38e07b]'
+					className='w-full h-2 mt-2 accent-[#FFFFFF]'
 				/>
 
 				<audio ref={audioRef} src={track.previewUrl} />

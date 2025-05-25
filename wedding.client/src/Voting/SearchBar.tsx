@@ -6,7 +6,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 	setQuery,
 	onSearch,
 }) => (
-	<div className='flex flex-1 justify-center py-5'>
+	<div className='flex justify-center py-5'>
 		<div className='flex flex-col flex-1'>
 			<form onSubmit={onSearch} className='px-4 flex flex-col'>
 				<label className='flex flex-col min-w-40 h-12 w-full'>
