@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import type { SongItemProps } from './SongItemProps';
+import type { Track } from './Track';
 
-const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
-	const handleToggle = () => onToggle(track);
+const AudioPlayer: React.FC<{ track: Track }> = ({ track }) => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
@@ -24,8 +23,7 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		};
 	}, []);
 
-	const togglePlay = (e: React.MouseEvent) => {
-		e.stopPropagation();
+	const togglePlay = () => {
 		const audio = audioRef.current;
 		if (!audio) return;
 		if (isPlaying) {
@@ -37,7 +35,6 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 	};
 
 	const seek = (e: React.MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
 		const rect = e.currentTarget.getBoundingClientRect();
 		const clickX = e.clientX - rect.left;
 		const newTime = (clickX / rect.width) * duration;
@@ -48,7 +45,6 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 	};
 
 	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.stopPropagation();
 		const vol = parseFloat(e.target.value);
 		setVolume(vol);
 		if (audioRef.current) audioRef.current.volume = vol;
@@ -56,29 +52,22 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 
 	const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
-	// const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
-
 	return (
-		<>
-			<div
-				className={`flex flex-col rounded-lg px-4 py-2 mb-2 cursor-pointer ${
-					isSelected && 'bg-[#FFA500]'
-				}`}
-				onClick={handleToggle}
-			>
+		<div className='px-4 py-3'>
+			<div className='flex flex-col gap-3 rounded-xl bg-[#264532] px-4 py-3'>
 				<div className='flex items-center gap-4 overflow-hidden'>
 					{track.artworkUrl100 && (
 						<img
 							src={track.artworkUrl100}
 							alt={track.trackName}
-							className='aspect-square rounded-lg size-14'
+							className='bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14'
 						/>
 					)}
 					<div className='flex-1'>
 						<p className='text-white text-base font-bold leading-tight truncate'>
 							{track.trackName}
 						</p>
-						<p className='text-white text-sm font-normal leading-normal truncate'>
+						<p className='text-[#96c5a9] text-sm font-normal leading-normal truncate'>
 							{track.artistName}
 						</p>
 					</div>
@@ -134,8 +123,8 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 
 				<audio ref={audioRef} src={track.previewUrl} />
 			</div>
-		</>
+		</div>
 	);
 };
 
-export default SongItem;
+export default AudioPlayer;

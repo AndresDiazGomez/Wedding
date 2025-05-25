@@ -6,7 +6,7 @@ export const SongList: React.FC<SongListProps> = ({
 	selected,
 	onToggle,
 }) => (
-	<ul>
+	<>
 		{tracks.map((track) => (
 			<SongItem
 				key={track.trackId}
@@ -15,5 +15,5 @@ export const SongList: React.FC<SongListProps> = ({
 				onToggle={onToggle}
 			/>
 		))}
-	</ul>
+	</>
 );

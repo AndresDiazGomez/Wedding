@@ -1,5 +1,5 @@
 import React from 'react';
-import SendVote from './SendVote';
+// import SendVote from './SendVote';
 import VotingResults from './VotingResults';
 import type { TrackVotes } from './TrackVotes';
 import { sendVotes } from './api';
@@ -23,9 +23,7 @@ const Dashboard: React.FC<{ entries: TrackVotes[] | undefined }> = ({
 				Vota por tu canción preferida
 			</h1>
 			<div className='flex flex-col md:flex-row gap-6'>
-				<div className='w-full md:w-1/2'>
-					<SendVote />
-				</div>
+				<div className='w-full md:w-1/2'>{/* <SendVote /> */}</div>
 				<div className='w-full md:w-1/2 bg-white rounded shadow p-4 mb-4 md:mb-0'>
 					<VotingResults entries={entries} onVote={onVoteHandler} />
 				</div>
