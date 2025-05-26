@@ -1,4 +1,9 @@
-import type { SelectedSongsProps } from './SelectedSongsProps';
+import type { Track } from './Track';
+
+interface SelectedSongsProps {
+	selected: Track[];
+	onRemove: (track: Track) => void;
+}
 
 export const SelectedSongs: React.FC<SelectedSongsProps> = ({
 	selected,

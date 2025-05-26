@@ -1,5 +1,14 @@
-import React from 'react';
-import type { SearchBarProps } from './SearchBarProps';
+import React, {
+	type FormEvent,
+	type Dispatch,
+	type SetStateAction,
+} from 'react';
+
+interface SearchBarProps {
+	query: string;
+	setQuery: Dispatch<SetStateAction<string>>;
+	onSearch: (e: FormEvent<HTMLFormElement>) => void;
+}
 
 export const SearchBar: React.FC<SearchBarProps> = ({
 	query,

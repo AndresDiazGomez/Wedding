@@ -1,7 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { VotingResultsProps } from './VotingResultsProps';
 import type { TrackVotes } from './TrackVotes';
+import type { Track } from './Track';
+
+interface VotingResultsProps {
+	entries: TrackVotes[];
+	onVote: (track: Track) => void;
+}
 
 const VotingResults: React.FC<VotingResultsProps> = ({
 	entries = [],
@@ -19,7 +24,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 		<div>
 			<motion.ul layout className='space-y-4'>
 				<AnimatePresence>
-					{merged.map(({ track, votes }, index) => (
+					{merged.map(({ track }, index) => (
 						<motion.li
 							key={track.trackId}
 							layout
@@ -27,7 +32,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -20 }}
 							transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-							className={`flex-col rounded-lg px-4 py-2 mb-2 ${
+							className={`flex-col px-4 py-2 mb-2 ${
 								index === 0 ? 'bg-[#FFA500]' : ''
 							}`}
 						>
@@ -48,9 +53,6 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 									</p>
 									<p className='truncate text-white text-sm font-normal leading-normal'>
 										{track.artistName}
-									</p>
-									<p className='truncate text-white text-sm font-normal leading-normal'>
-										Votos: {votes}
 									</p>
 								</div>
 								<button

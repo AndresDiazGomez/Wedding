@@ -1,5 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import type { SongItemProps } from './SongItemProps';
+import type { Track } from './Track';
+
+interface SongItemProps {
+	track: Track;
+	isSelected: boolean;
+	onToggle: (track: Track) => void;
+}
 
 const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 	const handleToggle = () => onToggle(track);
@@ -71,8 +77,8 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 	return (
 		<>
 			<div
-				className={`flex flex-col rounded-lg px-4 py-2 mb-2 cursor-pointer ${
-					isSelected ? 'bg-[#FFA500]' : ''
+				className={`flex flex-col px-4 py-2 mb-2 cursor-pointer ${
+					isSelected ? 'bg-[#5cb85c]' : ''
 				}`}
 				onClick={handleToggle}
 			>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import type { Track } from './Track';
 import { SelectedSongs } from './SelectedSongs';
-import { SongList } from './SongList';
 import { sendVotes } from './api';
+import SongItem from './SongItem';
 
 export const SendVote: React.FC<{ tracks: Track[] }> = ({ tracks }) => {
 	const [selected, setSelected] = useState<Track[]>([]);
@@ -54,7 +54,14 @@ export const SendVote: React.FC<{ tracks: Track[] }> = ({ tracks }) => {
 			<h2 className='text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5'>
 				Resultados de la búsqueda
 			</h2>
-			<SongList tracks={tracks} selected={selected} onToggle={toggleSelect} />
+			{tracks.map((track) => (
+				<SongItem
+					key={track.trackId}
+					track={track}
+					isSelected={selected.some((t) => t.trackId === track.trackId)}
+					onToggle={toggleSelect}
+				/>
+			))}
 			{getSubmitSection()}
 		</>
 	);
