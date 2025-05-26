@@ -17,7 +17,6 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 
 	return (
 		<div>
-			<h2 className='text-xl font-bold mb-4'>Resultados de Votación</h2>
 			<motion.ul layout className='space-y-4'>
 				<AnimatePresence>
 					{merged.map(({ track, votes }, index) => (
@@ -28,33 +27,39 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -20 }}
 							transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-							className={`flex items-center ${
-								index === 0 ? 'bg-green-100' : 'bg-white'
-							} p-4 rounded shadow`}
+							className={`flex-col rounded-lg px-4 py-2 mb-2 ${
+								index === 0 ? 'bg-[#FFA500]' : ''
+							}`}
 						>
-							<span className='w-6 text-lg font-bold mr-4'>{index + 1}</span>
-							<img
-								src={track.artworkUrl100}
-								alt={track.trackName}
-								className='w-24 h-24 mr-4'
-							/>
-							<div className='flex-grow'>
-								<p className='font-semibold'>{track.trackName}</p>
-								<p className='text-sm text-gray-600'>{track.artistName}</p>
-								<p className='text-sm'>Votos: {votes}</p>
-								{track.previewUrl && (
-									<audio controls className='mt-2 w-full'>
-										<source src={track.previewUrl} type='audio/mp4' />
-										Your browser does not support the audio element.
-									</audio>
+							<div className='flex items-center gap-4 overflow-hidden'>
+								<span className='text-white text-base font-bold mr-4'>
+									{index + 1}
+								</span>
+								{track.artworkUrl100 && (
+									<img
+										src={track.artworkUrl100}
+										alt={track.trackName}
+										className='w-14 h-14 aspect-square rounded-lg'
+									/>
 								)}
+								<div className='flex-1 min-w-0'>
+									<p className='truncate text-white text-base font-bold leading-tight'>
+										{track.trackName}
+									</p>
+									<p className='truncate text-white text-sm font-normal leading-normal'>
+										{track.artistName}
+									</p>
+									<p className='truncate text-white text-sm font-normal leading-normal'>
+										Votos: {votes}
+									</p>
+								</div>
+								<button
+									onClick={() => onVote(track)}
+									className='rounded-full h-10 px-4 bg-[#264532] text-white text-sm font-bold leading-normal tracking-[0.015em] border border-white'
+								>
+									Votar
+								</button>
 							</div>
-							<button
-								onClick={() => onVote(track)}
-								className='ml-4 p-2 bg-blue-500 text-white rounded cursor-pointer'
-							>
-								Votar
-							</button>
 						</motion.li>
 					))}
 				</AnimatePresence>

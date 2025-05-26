@@ -53,12 +53,18 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		}
 	};
 
-	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.stopPropagation();
-		const vol = parseFloat(e.target.value);
+	const setAudioVolume = (vol: number) => {
 		setVolume(vol);
 		if (audioRef.current) audioRef.current.volume = vol;
 	};
+
+	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		e.stopPropagation();
+		const vol = parseFloat(e.target.value);
+		setAudioVolume(vol);
+	};
+
+	const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
 	const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
@@ -75,14 +81,14 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 						<img
 							src={track.artworkUrl100}
 							alt={track.trackName}
-							className='flex-shrink-0 w-14 h-14 aspect-square rounded-lg'
+							className='w-14 h-14 aspect-square rounded-lg'
 						/>
 					)}
 					<div className='flex-1 min-w-0'>
-						<p className='truncate whitespace-nowrap text-white text-base font-bold leading-tight'>
+						<p className='truncate text-white text-base font-bold leading-tight'>
 							{track.trackName}
 						</p>
-						<p className='truncate whitespace-nowrap text-white text-sm font-normal leading-normal'>
+						<p className='truncate text-white text-sm font-normal leading-normal'>
 							{track.artistName}
 						</p>
 					</div>
@@ -126,15 +132,30 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 				</div>
 
 				{/* Volume Control */}
-				<input
-					type='range'
-					min={0}
-					max={1}
-					step={0.01}
-					value={volume}
-					onChange={handleVolumeChange}
-					className='w-full h-2 mt-2 accent-[#FFFFFF]'
-				/>
+				<div
+					className='flex flex-row items-center mt-1 w-full sm:w-[200px]'
+					onClick={stopPropagation}
+				>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						width='24px'
+						height='24px'
+						fill='#FFFFFF'
+						viewBox='0 0 24 24'
+						onClick={() => setAudioVolume(0)}
+					>
+						<path d='M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.06c1.5-.74 2.5-2.26 2.5-4.03zm2.5 0c0 2.53-1.61 4.71-4 5.42v2.02c3.31-.77 6-3.85 6-7.44s-2.69-6.67-6-7.44v2.02c2.39.71 4 2.89 4 5.42z' />
+					</svg>
+					<input
+						type='range'
+						min={0}
+						max={1}
+						step={0.01}
+						value={volume}
+						onChange={handleVolumeChange}
+						className='w-full h-2 ms-2 accent-[#FFFFFF]'
+					/>
+				</div>
 
 				<audio ref={audioRef} src={track.previewUrl} />
 			</div>

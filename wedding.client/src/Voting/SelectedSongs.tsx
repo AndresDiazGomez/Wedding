@@ -4,32 +4,39 @@ export const SelectedSongs: React.FC<SelectedSongsProps> = ({
 	selected,
 	onRemove,
 }) => (
-	<div className='mt-6'>
-		<h2 className='text-lg font-bold mb-2'>Canciones Seleccionadas</h2>
-		{selected.length === 0 ? (
-			<p className='text-gray-600'>No has seleccionado ninguna canción.</p>
-		) : (
-			<ul>
-				{selected.map((track) => (
-					<li key={track.trackId} className='mb-2 flex items-center'>
-						<button
-							onClick={() => onRemove(track)}
-							className='text-red-500 mr-2 cursor-pointer'
-						>
-							✕
-						</button>
+	<div>
+		<h2 className='text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5'>
+			Canciones Seleccionadas
+		</h2>
+		<ul className='px-4'>
+			{selected.map((track) => (
+				<li
+					key={track.trackId}
+					className='flex items-center gap-4 mt-1 overflow-hidden'
+				>
+					{track.artworkUrl100 && (
 						<img
 							src={track.artworkUrl100}
 							alt={track.trackName}
-							className='w-24 h-24 mr-2'
+							className='w-14 h-14 aspect-square rounded-lg'
 						/>
-						<div>
-							<p className='font-semibold'>{track.trackName}</p>
-							<p className='text-sm text-gray-600'>{track.artistName}</p>
-						</div>
-					</li>
-				))}
-			</ul>
-		)}
+					)}
+					<div className='flex-1 min-w-0'>
+						<p className='truncate text-white text-base font-bold leading-tight'>
+							{track.trackName}
+						</p>
+						<p className='truncate text-white text-sm font-normal leading-normal'>
+							{track.artistName}
+						</p>
+					</div>
+					<button
+						onClick={() => onRemove(track)}
+						className='text-white mr-2 cursor-pointer'
+					>
+						✕
+					</button>
+				</li>
+			))}
+		</ul>
 	</div>
 );
