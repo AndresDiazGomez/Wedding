@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { TrackVotes } from './TrackVotes';
 import type { Track } from './Track';
+import VotingResultItem from './VotingResultItem'; // Import the new component
 
 interface VotingResultsProps {
 	entries: TrackVotes[];
@@ -36,32 +37,12 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 								index === 0 ? 'bg-[#38e07b]' : ''
 							}`}
 						>
-							<div className='flex items-center gap-4 overflow-hidden'>
-								<span className='text-white text-base font-bold mr-4'>
-									{index + 1}
-								</span>
-								{track.artworkUrl100 && (
-									<img
-										src={track.artworkUrl100}
-										alt={track.trackName}
-										className='w-14 h-14 aspect-square rounded-lg'
-									/>
-								)}
-								<div className='flex-1 min-w-0'>
-									<p className='truncate text-white text-base font-bold leading-tight'>
-										{track.trackName}
-									</p>
-									<p className='truncate text-white text-sm font-normal leading-normal'>
-										{track.artistName}
-									</p>
-								</div>
-								<button
-									onClick={() => onVote(track)}
-									className='rounded-full h-10 px-4 bg-[#264532] text-white text-sm font-bold leading-normal tracking-[0.015em] border border-white'
-								>
-									Votar
-								</button>
-							</div>
+							<VotingResultItem
+								key={track.trackId}
+								track={track}
+								position={index + 1}
+								onVote={onVote}
+							/>
 						</motion.li>
 					))}
 				</AnimatePresence>
