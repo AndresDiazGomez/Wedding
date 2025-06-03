@@ -33,7 +33,7 @@ const VotingResults: React.FC<VotingResultsProps> = ({
 							exit={{ opacity: 0, y: -20 }}
 							transition={{ type: 'spring', stiffness: 500, damping: 30 }}
 							className={`flex-col px-4 py-2 mb-2 ${
-								index === 0 ? 'bg-[#FFA500]' : ''
+								index === 0 ? 'bg-[#38e07b]' : ''
 							}`}
 						>
 							<div className='flex items-center gap-4 overflow-hidden'>

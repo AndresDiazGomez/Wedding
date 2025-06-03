@@ -6,7 +6,7 @@ namespace Wedding.Module.Vote;
 
 internal class FlushServiceProcessor : BackgroundService
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromSeconds(5));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMinutes(1));
     private readonly MemoryTrackRepository _memoryRepository;
     private readonly ILogger<FlushServiceProcessor> _logger;
 

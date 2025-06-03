@@ -1,1 +1,22 @@
 @import 'tailwindcss';
+
+@keyframes shake {
+	0% {
+		transform: rotate(0deg);
+	}
+	20% {
+		transform: rotate(15deg);
+	} /* right */
+	40% {
+		transform: rotate(-15deg);
+	} /* left */
+	60% {
+		transform: rotate(15deg);
+	} /* right again */
+	80% {
+		transform: rotate(-15deg);
+	} /* left again */
+	100% {
+		transform: rotate(0deg);
+	} /* back to center */
+}

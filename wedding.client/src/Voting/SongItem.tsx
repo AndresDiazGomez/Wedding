@@ -3,17 +3,26 @@ import type { Track } from './Track';
 
 interface SongItemProps {
 	track: Track;
-	isSelected: boolean;
-	onToggle: (track: Track) => void;
+	isEven: boolean;
+	onPlay: (audio: HTMLAudioElement) => void;
+	onVote: (track: Track) => void;
 }
 
-const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
-	const handleToggle = () => onToggle(track);
+const ufoGreenColor = '#38e07b';
+const strokeWidth = 1.5;
+
+const SongItem: React.FC<SongItemProps> = ({
+	track,
+	isEven,
+	onPlay,
+	onVote,
+}) => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration] = useState(0);
-	const [volume, setVolume] = useState(1);
+	// const [volume, setVolume] = useState(1);
+	const [animate, setAnimate] = useState(false);
 
 	useEffect(() => {
 		const audio = audioRef.current;
@@ -36,20 +45,21 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		};
 	}, []);
 
-	const togglePlay = (e: React.MouseEvent) => {
-		e.stopPropagation();
+	const togglePlay = () => {
 		const audio = audioRef.current;
-		if (!audio) return;
+		if (!audio) {
+			return;
+		}
 		if (isPlaying) {
 			audio.pause();
 		} else {
+			onPlay(audio);
 			audio.play();
 		}
 		setIsPlaying(!isPlaying);
 	};
 
 	const seek = (e: React.MouseEvent<HTMLDivElement>) => {
-		e.stopPropagation();
 		const rect = e.currentTarget.getBoundingClientRect();
 		const clickX = e.clientX - rect.left;
 		const newTime = (clickX / rect.width) * duration;
@@ -59,18 +69,22 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		}
 	};
 
-	const setAudioVolume = (vol: number) => {
-		setVolume(vol);
-		if (audioRef.current) audioRef.current.volume = vol;
-	};
+	// const setAudioVolume = (vol: number) => {
+	// 	setVolume(vol);
+	// 	if (audioRef.current) {
+	// 		audioRef.current.volume = vol;
+	// 	}
+	// };
 
-	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.stopPropagation();
-		const vol = parseFloat(e.target.value);
-		setAudioVolume(vol);
-	};
+	// const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	const vol = parseFloat(e.target.value);
+	// 	setAudioVolume(vol);
+	// };
 
-	const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+	const voteHandler = () => {
+		onVote(track);
+		setAnimate(true);
+	};
 
 	const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
@@ -78,9 +92,8 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 		<>
 			<div
 				className={`flex flex-col px-4 py-2 mb-2 cursor-pointer ${
-					isSelected ? 'bg-[#5cb85c]' : ''
+					isEven ? 'bg-[#b3b3b3]/15' : ''
 				}`}
-				onClick={handleToggle}
 			>
 				<div className='flex items-center gap-4 overflow-hidden'>
 					{track.artworkUrl100 && (
@@ -100,30 +113,57 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 					</div>
 					<button
 						onClick={togglePlay}
-						className='flex-shrink-0 flex items-center justify-center rounded-full w-10 h-10 bg-[#38e07b] text-[#122118]'
+						className='flex-shrink-0 flex items-center justify-center text-[#122118]'
 					>
 						{isPlaying ? (
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
-								width='24px'
-								height='24px'
-								fill='currentColor'
-								viewBox='0 0 256 256'
+								fill='none'
+								viewBox='0 0 24 24'
+								strokeWidth={strokeWidth}
+								stroke={ufoGreenColor}
+								className='size-8 ml-auto my-4'
 							>
-								<path d='M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z' />
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									d='M15.75 5.25v13.5m-7.5-13.5v13.5'
+								/>
 							</svg>
 						) : (
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
-								width='24px'
-								height='24px'
-								fill='currentColor'
-								viewBox='0 0 256 256'
+								fill='none'
+								viewBox='0 0 24 24'
+								strokeWidth={strokeWidth}
+								stroke={ufoGreenColor}
+								className='size-8 ml-auto my-4'
 							>
-								<path d='M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z' />
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z'
+								/>
 							</svg>
 						)}
 					</button>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						fill={animate ? ufoGreenColor : 'none'}
+						viewBox='0 0 24 24'
+						strokeWidth={strokeWidth}
+						stroke={ufoGreenColor}
+						className={`size-8 ml-auto my-4 ${
+							animate ? 'animate-[shake_1s_ease-in-out]' : ''
+						}`}
+						onClick={voteHandler}
+					>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							d='M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z'
+						/>
+					</svg>
 				</div>
 
 				{/* Progress Bar */}
@@ -133,15 +173,15 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 				>
 					<div
 						className='absolute top-0 left-0 h-full rounded-full'
-						style={{ width: `${progressPercent}%`, backgroundColor: '#38e07b' }}
+						style={{
+							width: `${progressPercent}%`,
+							backgroundColor: ufoGreenColor,
+						}}
 					/>
 				</div>
 
 				{/* Volume Control */}
-				<div
-					className='flex flex-row items-center mt-1 w-full sm:w-[200px]'
-					onClick={stopPropagation}
-				>
+				{/* <div className='flex flex-row items-center mt-1 w-full sm:w-[200px]'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						width='24px'
@@ -161,7 +201,7 @@ const SongItem: React.FC<SongItemProps> = ({ track, isSelected, onToggle }) => {
 						onChange={handleVolumeChange}
 						className='w-full h-2 ms-2 accent-[#FFFFFF]'
 					/>
-				</div>
+				</div> */}
 
 				<audio ref={audioRef} src={track.previewUrl} />
 			</div>

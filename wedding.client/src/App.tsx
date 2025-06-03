@@ -35,7 +35,7 @@ const App: React.FC = () => {
 			const res = await fetch(
 				`https://itunes.apple.com/search?term=${encodeURIComponent(
 					query,
-				)}&media=music&limit=3`,
+				)}&media=music&limit=10`,
 			);
 			const data: { results: Track[] } = await res.json();
 			setTracks(data.results);
@@ -55,37 +55,21 @@ const App: React.FC = () => {
 		}
 	};
 
-	const showResults = () => {
-		if (tracks.length === 0) {
-			return <></>;
-		}
-		return (
-			<>
-				<div className='flex px-4 justify-end'>
-					<button
-						onClick={() => setTracks([])}
-						className='flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#264532] text-white text-sm font-bold leading-normal tracking-[0.015em] border border-white'
-					>
-						<span className='truncate'>Borrar resultados</span>
-					</button>
-				</div>
-				<SendVote tracks={tracks} />
-			</>
-		);
-	};
-
-	console.log('results', results);
-
 	return (
 		<div className='flex flex-col w-full min-h-screen bg-[#141f18]'>
-			<SearchBar query={query} setQuery={setQuery} onSearch={handleSearch} />
+			<SearchBar
+				query={query}
+				setQuery={setQuery}
+				onSearch={handleSearch}
+				onClear={() => setTracks([])}
+			/>
 			{loading && (
 				<p className='truncate text-white text-base font-bold leading-tight'>
 					Cargando...
 				</p>
 			)}
 			{error && <p className='text-red-500'>{error}</p>}
-			{showResults()}
+			{tracks.length > 0 && <SendVote tracks={tracks} onVoteSent={() => {}} />}
 			<h2 className='text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5'>
 				Canciones más votadas
 			</h2>
