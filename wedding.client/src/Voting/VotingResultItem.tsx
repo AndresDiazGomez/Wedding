@@ -17,9 +17,9 @@ const VotingResultItem: React.FC<VotingResultItemProps> = ({
 	const [animate, setAnimate] = useState(false);
 
 	const voteHandler = () => {
-		if (animate) {
-			return;
-		}
+		// if (animate) {
+		// 	return;
+		// }
 		onVote(track);
 		setAnimate(true);
 	};
@@ -45,7 +45,7 @@ const VotingResultItem: React.FC<VotingResultItemProps> = ({
 			<VoteIcon
 				strokeColor='#ffffff'
 				strokeWidth={1.5}
-				animate={animate}
+				shouldFill={animate}
 				onVote={voteHandler}
 			/>
 		</div>

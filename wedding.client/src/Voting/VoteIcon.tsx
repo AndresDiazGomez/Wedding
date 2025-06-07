@@ -3,26 +3,26 @@ import React from 'react';
 interface VoteIconProps {
 	strokeColor: string;
 	strokeWidth: number;
-	animate?: boolean;
+	shouldFill?: boolean;
 	onVote: () => void;
 }
 
 const VoteIcon: React.FC<VoteIconProps> = ({
 	strokeColor,
 	strokeWidth,
-	animate = false,
+	shouldFill = false,
 	onVote,
 }) => {
 	return (
 		<svg
 			xmlns='http://www.w3.org/2000/svg'
-			fill={animate ? strokeColor : 'none'} // Use strokeColor prop
+			fill={shouldFill ? strokeColor : 'none'} // Use strokeColor prop
 			viewBox='0 0 24 24'
 			strokeWidth={strokeWidth} // Use strokeWidth prop
 			stroke={strokeColor}
-			className={`size-8 ml-auto my-4 transition-colors duration-300 ease-in-out ${
-				animate ? 'animate-[shake_1s_ease-in-out]' : ''
-			}`}
+			className='size-8 ml-auto my-4'
+			// 	animate ? 'animate-[shake_1s_ease-in-out]' : ''
+			// }`}
 			onClick={onVote}
 		>
 			<path

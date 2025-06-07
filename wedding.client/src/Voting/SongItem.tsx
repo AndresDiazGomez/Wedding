@@ -1,23 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import type { Track } from './Track';
 import VoteIcon from './VoteIcon';
+import { MusicDispatcher } from './MusicDispatcher';
+
+// Create a shared dispatcher instance (if not already created elsewhere)
+const musicDispatcher = new MusicDispatcher();
+const ufoGreenColor = '#38e07b';
+const strokeWidth = 1.5;
 
 interface SongItemProps {
 	track: Track;
 	isEven: boolean;
-	onPlay: (audio: HTMLAudioElement) => void;
 	onVote: (track: Track) => void;
 }
 
-const ufoGreenColor = '#38e07b';
-const strokeWidth = 1.5;
-
-const SongItem: React.FC<SongItemProps> = ({
-	track,
-	isEven,
-	onPlay,
-	onVote,
-}) => {
+const SongItem: React.FC<SongItemProps> = ({ track, isEven, onVote }) => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const [animate, setAnimate] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
@@ -46,6 +43,19 @@ const SongItem: React.FC<SongItemProps> = ({
 		};
 	}, []);
 
+	useEffect(() => {
+		// Subscribe to the dispatcher on mount
+		const unsubscribe = musicDispatcher.subscribe(() => {
+			if (audioRef.current && isPlaying) {
+				audioRef.current.pause();
+				setIsPlaying(false);
+			}
+		});
+		return () => {
+			unsubscribe();
+		};
+	}, [isPlaying]);
+
 	const togglePlay = () => {
 		const audio = audioRef.current;
 		if (!audio) {
@@ -54,7 +64,7 @@ const SongItem: React.FC<SongItemProps> = ({
 		if (isPlaying) {
 			audio.pause();
 		} else {
-			onPlay(audio);
+			musicDispatcher.playNewSong(); // Notify other components that a new song is being played
 			audio.play();
 		}
 		setIsPlaying(!isPlaying);
@@ -154,7 +164,7 @@ const SongItem: React.FC<SongItemProps> = ({
 					<VoteIcon
 						strokeColor={ufoGreenColor}
 						strokeWidth={strokeWidth}
-						animate={animate}
+						shouldFill={animate}
 						onVote={voteHandler}
 					/>
 				</div>
