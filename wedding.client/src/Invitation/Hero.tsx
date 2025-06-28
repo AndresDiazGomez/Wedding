@@ -35,7 +35,7 @@ const Hero = () => {
 					className='text-xl md:text-2xl text-gray-300 mb-8 animate-fade-in'
 					style={{ animationDelay: '0.3s' }}
 				>
-					Sonando ahora: Juntos Por Siempre
+					Now Playing: Juntos Por Siempre
 				</p>
 
 				{/* Wedding Date Highlight */}
@@ -54,9 +54,9 @@ const Hero = () => {
 					className='text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed animate-fade-in'
 					style={{ animationDelay: '0.9s' }}
 				>
-					Unete a nosotros para una celebración de amor, música y nuevos
-					comienzos mientras comenzamos nuestra mayor colaboración hasta el
-					momento.
+					Unete a nosotros para una celebración de amor, música y un nuevo
+					comienzo. Estamos emocionados de compartir este momento especial junto
+					a ti.
 				</p>
 			</div>
 

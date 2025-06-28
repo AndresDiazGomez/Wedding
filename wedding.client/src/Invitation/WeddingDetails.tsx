@@ -1,7 +1,16 @@
-import { Calendar, MapPin, Shirt } from 'lucide-react';
+import {
+	Calendar,
+	CalendarCheck2,
+	MapPin,
+	Shirt,
+	ListVideo,
+} from 'lucide-react';
 import { SiGooglemaps, SiWaze } from 'react-icons/si';
+import { useNavigate } from 'react-router-dom';
 
 const WeddingDetails = () => {
+	const navigate = useNavigate();
+
 	const details = [
 		{
 			icon: Calendar,
@@ -27,7 +36,7 @@ const WeddingDetails = () => {
 							Google Maps
 						</a>
 						<a
-							href='https://waze.com/ul?ll=6.1769,-75.3382&navigate=yes'
+							href='https://waze.com/ul?ll=6.19235256,-75.34836888&navigate=yes'
 							target='_blank'
 							rel='noopener noreferrer'
 							className='flex items-center gap-2 underline text-green-300 hover:text-green-400 transition-colors'
@@ -45,8 +54,42 @@ const WeddingDetails = () => {
 			icon: Shirt,
 			title: 'Código de Vestimenta',
 			content: 'Tipo cóctel',
-			subtitle: 'Piensa en elegante y cómodo',
+			subtitle: 'Elegante y cómodo',
 			description: 'Colores bienvenidos, pero por favor evita el blanco',
+		},
+	];
+
+	const otherDetails = [
+		{
+			onClick: () => navigate('/Vote'),
+			icon: ListVideo,
+			title: 'Lista de reproducción',
+			content: '',
+			subtitle: '',
+			description:
+				'Estamos creando la lista perfecta para nuestro día especial. Desde nuestro primer baile hasta la última canción de la noche, cada momento estará ambientado con música, sumate!',
+		},
+		{
+			icon: CalendarCheck2,
+			title: 'Cronograma',
+			content: '',
+			subtitle: (
+				<div className='space-y-2 text-gray-300'>
+					<div className='flex justify-between'>
+						<span>Ceremonia</span>
+						<span>4:00 PM</span>
+					</div>
+					<div className='flex justify-between'>
+						<span>Cóctel</span>
+						<span>5:00 PM</span>
+					</div>
+					<div className='flex justify-between'>
+						<span>Recepción</span>
+						<span>6:00 PM</span>
+					</div>
+				</div>
+			),
+			description: '',
 		},
 	];
 
@@ -67,6 +110,40 @@ const WeddingDetails = () => {
 						<div
 							key={index}
 							className='group bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-green-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/10'
+							style={{ animationDelay: `${index * 0.2}s` }}
+						>
+							{/* Icon */}
+							<div className='mb-6'>
+								<div className='w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center group-hover:bg-green-500/30 transition-colors'>
+									<detail.icon className='w-8 h-8 text-green-400' />
+								</div>
+							</div>
+
+							{/* Content */}
+							<h3 className='text-2xl font-bold text-white mb-3'>
+								{detail.title}
+							</h3>
+							<p className='text-xl text-green-300 font-semibold mb-2'>
+								{detail.content}
+							</p>
+							<div className='text-gray-300 mb-2'>{detail.subtitle}</div>
+							<p className='text-gray-400 text-sm'>{detail.description}</p>
+
+							{/* Decorative Element */}
+							<div className='mt-6 h-1 w-full bg-gradient-to-r from-transparent via-green-500/30 to-transparent rounded-full'></div>
+						</div>
+					))}
+				</div>
+
+				{/* Additional Info */}
+				<div className='mt-16 grid md:grid-cols-2 gap-8'>
+					{otherDetails.map((detail, index) => (
+						<div
+							{...(detail.onClick ? { onClick: detail.onClick } : {})}
+							key={index}
+							className={`${
+								detail.onClick ? 'cursor-pointer' : ''
+							} group bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-green-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/10`}
 							style={{ animationDelay: `${index * 0.2}s` }}
 						>
 							{/* Icon */}

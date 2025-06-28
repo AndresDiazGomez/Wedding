@@ -80,14 +80,16 @@ const RSVPSection = () => {
 						</a>
 					</p>
 				</div>
-
 				{/* Footer */}
-				<div className='mt-16 pt-8 border-t border-gray-700/50'>
+				<footer className='mt-16 pt-8 border-t border-gray-700/50'>
 					<p className='text-gray-500 flex items-center justify-center gap-2'>
-						Hecho con <Heart className='mx-1 w-4 h-4 text-red-400 shrink-0' />{' '}
-						mucha música... y sí, también ¡Inteligencia Artificial!
+						Hecho con <Heart className='mx-1 w-4 h-4 text-red-400' />
+						mucha música
 					</p>
-				</div>
+					<p className='text-gray-500 flex items-center justify-center gap-2'>
+						... y sí, también ¡Inteligencia Artificial!
+					</p>
+				</footer>
 			</div>
 		</section>
 	);
