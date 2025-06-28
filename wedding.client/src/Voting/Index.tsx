@@ -1,16 +1,13 @@
 import React, { useEffect, useState, type FormEvent } from 'react';
-import type { TrackVotes } from './Voting/TrackVotes';
-import { getVotes, sendVotes } from './Voting/api';
-import {
-	startVotingHubConnection,
-	stopVotingHubConnection,
-} from './Voting/VotingHub';
-import { SearchBar } from './Voting/SearchBar';
-import type { Track } from './Voting/Track';
-import SendVote from './Voting/SendVote';
-import VotingResults from './Voting/VotingResults';
+import type { TrackVotes } from './TrackVotes';
+import { getVotes, sendVotes } from './api';
+import { startVotingHubConnection, stopVotingHubConnection } from './VotingHub';
+import { SearchBar } from './SearchBar';
+import type { Track } from './Track';
+import SendVote from './SendVote';
+import VotingResults from './VotingResults';
 
-const App: React.FC = () => {
+const Index: React.FC = () => {
 	const [results, setResults] = useState<TrackVotes[]>([]);
 	const [query, setQuery] = useState<string>('');
 	const [tracks, setTracks] = useState<Track[]>([]);
@@ -78,4 +75,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default Index;
