@@ -56,8 +56,11 @@ public static class ModuleRegistration
             {
                 return Results.BadRequest();
             }
-            await repository.UpsertTrackAsync(trackVote);
-            await eventBus.PublishAsync(new NewVotedIntegrationEvent(trackVote), cancellationToken);
+            bool wasAdded = repository.UpsertTrack(trackVote);
+            if (wasAdded)
+            {
+                await eventBus.PublishAsync(new NewVotedIntegrationEvent(trackVote), cancellationToken);
+            }
             return Results.Ok();
         });
 

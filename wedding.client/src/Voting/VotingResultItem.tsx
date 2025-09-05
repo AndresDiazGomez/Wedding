@@ -17,9 +17,10 @@ const VotingResultItem: React.FC<VotingResultItemProps> = ({
 	const [animate, setAnimate] = useState(false);
 
 	const voteHandler = () => {
-		// if (animate) {
-		// 	return;
-		// }
+		// TODO
+		if (animate) {
+			return;
+		}
 		onVote(track);
 		setAnimate(true);
 	};

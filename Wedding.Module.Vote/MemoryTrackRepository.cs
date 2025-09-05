@@ -29,31 +29,39 @@ public class MemoryTrackRepository
         return Task.FromResult(result);
     }
 
-    internal Task UpsertTrackAsync(VoteForTrackCommand TrackVote)
+    internal bool UpsertTrack(VoteForTrackCommand TrackVote)
     {
+        bool added = false;
         foreach (Track track in TrackVote.Tracks)
         {
             _store.AddOrUpdate(
                 track.TrackId,
-                key => new TrackVotes
+                key => 
                 {
-                    TrackId = track.TrackId,
-                    ArtworkUrl100 = track.ArtworkUrl100,
-                    TrackName = track.TrackName,
-                    ArtistName = track.ArtistName,
-                    PreviewUrl = track.PreviewUrl,
-                    Voters = [TrackVote.VoterId]
+                    added = true;
+                    return new TrackVotes
+                    {
+                        TrackId = track.TrackId,
+                        ArtworkUrl100 = track.ArtworkUrl100,
+                        TrackName = track.TrackName,
+                        ArtistName = track.ArtistName,
+                        PreviewUrl = track.PreviewUrl,
+                        Voters = [TrackVote.VoterId]
+                    };
                 },
                 (key, existing) =>
                 {
-                    existing.Voters.Add(TrackVote.VoterId);
+                    if (existing.Voters.Add(TrackVote.VoterId))
+                    {
+                        added = true;
+                    }
                     return existing;
                 }
             );
             _dirty.Add(track.TrackId);
         }
 
-        return Task.CompletedTask;
+        return added;
     }
 
     internal Task<bool> RemoveTrackAsync(long trackId)
